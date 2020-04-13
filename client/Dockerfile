@@ -1,8 +1,8 @@
-FROM node:erbium-alpine3.10
+FROM node:erbium-alpine3.10 as builder
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package-lock.json package.json ./
 
 RUN npm install
 
@@ -15,4 +15,4 @@ FROM nginx
 EXPOSE 3000
 
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=0 /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
