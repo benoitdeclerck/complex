@@ -1,0 +1,25 @@
+language: generic
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t benoitdeclerck/complex -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true benoitdeclerck/complex npm test
+
+after_success:
+  - docker build -t benoitdeclerck/multi-client ./client
+  - docker build -t benoitdeclerck/multi-nginx ./nginx
+  - docker build -t benoitdeclerck/multi-server ./server
+  - docker build -t benoitdeclerck/multi-worker ./worker
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take these images and push them to docker hub
+  - docker push benoitdeclerck/multi-client
+  - docker push benoitdeclerck/multi-nginx
+  - docker push benoitdeclerck/multi-server
+  - docker push benoitdeclerck/multi-worker
+
