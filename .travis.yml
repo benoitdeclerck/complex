@@ -23,3 +23,16 @@ after_success:
   - docker push benoitdeclerck/multi-server
   - docker push benoitdeclerck/multi-worker
 
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: eu-central-1
+  app: complex
+  env: Complex-env
+  bucket_name: elasticbeanstalk-eu-central-1-197962664988
+  bucket_path: complex
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
